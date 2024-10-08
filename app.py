@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Dict
@@ -10,8 +11,13 @@ import random
 
 app = FastAPI()
 
-# Groq client initialization
-client = Groq(api_key='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')
+# Load sensitive data from environment variables
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')  # Groq API key
+EMAIL_USER = os.getenv('EMAIL_USER')      # Email account user
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')  # Email account password
+
+# Groq client initialization using environment variable for the API key
+client = Groq(api_key=GROQ_API_KEY)
 
 # In-memory store for user chat sessions
 user_sessions: Dict[str, Dict] = {}
@@ -42,9 +48,9 @@ def generate_random_quote() -> str:
 # Function to send an email with the diet plan and logo as inline image
 def send_email_with_diet_plan(to_email: str, diet_plan: str, logo_path: str):
     try:
-        # Email credentials (replace these with your credentials)
-        from_email = "71762108016@cit.edu.in"
-        password = "cit202110"
+        # Email credentials are now loaded from environment variables
+        from_email = EMAIL_USER
+        password = EMAIL_PASSWORD
 
         # Create email message
         msg = MIMEMultipart("related")  # Use "related" for inline images
