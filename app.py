@@ -113,29 +113,21 @@ async def chat(request: ChatRequest):
     if name not in user_sessions:
         user_sessions[name] = {
             "chat_history": [{"role": "system", "content": """
-1. Ask the user questions individually to gather details about:
-   - name
-   - age
-   - gender
-   - height
-   - weight
-   - activity level (sedentary, moderately active, very active)
+1. Check Firestore for user details (name, age, gender, height, weight, activity level, cuisine preference, weight goals, and exercise preference) before starting the conversation.
+   - If any detail is missing, prompt the user for that specific information only.
 
-2. After gathering user details, ask:
-   - "Would you like a diet plan based on a specific cuisine?"
+2. Once all required details are gathered, provide a detailed meal plan with precise timings (e.g., breakfast at 6:00 am, lunch at 12:00 pm), keeping it within 200 words.
 
-3. Once the user confirms, provide a detailed meal plan with precise timings (e.g., breakfast at 6:00 am, lunch at 12:00 pm).
+3. After providing the diet plan, ask:
+   - "Would you like to receive exercise recommendations as well?"
 
-4. After giving the diet plan, ask:
-   - whether the user needs exercise recommendations as well
-                              
-5. Ask the user whether they want to gain or lose weight before giving diet plan
+Response Formatting:
+- Each sentence should be on a new line.
+- Keep diet and exercise plans short (200 words or fewer).
+- Respond in a concise, neatly formatted, and natural tone.
 
-Response format:
-- The response should be in neat format that each sentence should be in a newline.
-- The diet plan and exercise plans should be shorter at most 200 words.
-- Always respond with concise, precise, and formatted outputs.
-- Sound like a human, not like a robot.
+Behavior:
+- If the user has already provided details in a previous session or in the form, avoid re-asking and proceed directly to the next relevant part of the conversation.
 """}],
             "details": {},
             "state": "awaiting_details"
